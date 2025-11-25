@@ -31,7 +31,7 @@ const PlayerProfile = () => {
         const fetchPlayer = async () => {
             try {
                 const playerRes = await getPlayerById(id);
-                setPlayer(playerRes.data);
+                setPlayer(playerRes);
             } catch (error) {
                 console.error("Error fetching player:", error);
                 setPlayer(null);
@@ -94,15 +94,15 @@ const PlayerProfile = () => {
                     </div>
                 </div>
                 <div className="text-center md:text-right">
-                     {/* Placeholder for team logo or jersey number if available */}
-                     <div className="text-6xl font-black text-slate-100">#{player.id}</div>
+                    {/* Placeholder for team logo or jersey number if available */}
+                    <div className="text-6xl font-black text-slate-100">#{player.id}</div>
                 </div>
             </div>
 
             {/* Season Selector */}
             <div className="flex justify-end">
-                <select 
-                    value={selectedSeason || ''} 
+                <select
+                    value={selectedSeason || ''}
                     onChange={(e) => setSelectedSeason(Number(e.target.value))}
                     className="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                 >

@@ -19,23 +19,41 @@ public class TeamService {
   @Autowired
   private RosterRepository rosterRepository;
 
-  public List<Team> getAllTeams() {
-    return teamRepository.findAll();
+  @Autowired
+  private com.nba.nba.mapper.TeamMapper teamMapper;
+
+  public List<com.nba.nba.dto.TeamDTO> getAllTeams() {
+    return teamRepository.findAll().stream()
+        .map(teamMapper::toDTO)
+        .collect(java.util.stream.Collectors.toList());
   }
 
-  public Optional<Team> getTeamById(Integer id) {
-    return teamRepository.findById(id);
+  public Optional<com.nba.nba.dto.TeamDTO> getTeamById(Integer id) {
+    return teamRepository.findById(id).map(teamMapper::toDTO);
   }
 
   public List<Roster> getRoster(Integer teamId, Integer seasonId) {
     return rosterRepository.findByTeamIdAndSeasonId(teamId, seasonId);
   }
 
-  public Team saveTeam(Team team) {
-    return teamRepository.save(team);
+  public com.nba.nba.dto.TeamDTO saveTeam(Team team) {
+    Team savedTeam = teamRepository.save(team);
+    return teamMapper.toDTO(savedTeam);
   }
 
   public void deleteTeam(Integer id) {
     teamRepository.deleteById(id);
+  }
+
+  @Autowired
+  private com.nba.nba.repository.DivisionRepository divisionRepository;
+
+  @Autowired
+  private com.nba.nba.mapper.DivisionMapper divisionMapper;
+
+  public List<com.nba.nba.dto.DivisionDTO> getAllDivisions() {
+    return divisionRepository.findAll().stream()
+        .map(divisionMapper::toDTO)
+        .collect(java.util.stream.Collectors.toList());
   }
 }

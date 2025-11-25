@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Container, Grid, Typography, Box, Card, CardContent, CircularProgress, Alert, FormControl, InputLabel, Select, MenuItem 
+import {
+  Container, Grid, Typography, Box, Card, CardContent, CircularProgress, Alert, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { getAllGames, getAllSeasons, getAllTeams } from '../services/api';
 import { Link } from 'react-router-dom';
@@ -20,12 +20,12 @@ const Games = () => {
         const [seasonsData, teamsData] = await Promise.all([getAllSeasons(), getAllTeams()]);
         setSeasons(seasonsData);
         setTeams(teamsData);
-        
+
         // Set default season to the latest one if available
         if (seasonsData.length > 0) {
-            // Assuming seasons are sorted or we find the max ID
-            const latestSeason = seasonsData.reduce((prev, current) => (prev.id > current.id) ? prev : current);
-            setSelectedSeason(latestSeason.id);
+          // Assuming seasons are sorted or we find the max ID
+          const latestSeason = seasonsData.reduce((prev, current) => (prev.id > current.id) ? prev : current);
+          setSelectedSeason(latestSeason.id);
         }
       } catch (err) {
         console.error("Failed to load filters", err);
@@ -66,40 +66,40 @@ const Games = () => {
           Games
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-            <FormControl sx={{ minWidth: 120 }} size="small">
-                <InputLabel id="season-select-label">Season</InputLabel>
-                <Select
-                    labelId="season-select-label"
-                    id="season-select"
-                    value={selectedSeason}
-                    label="Season"
-                    onChange={handleSeasonChange}
-                >
-                    <MenuItem value=""><em>All Seasons</em></MenuItem>
-                    {seasons.map((season) => (
-                        <MenuItem key={season.id} value={season.id}>
-                            {season.description}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <FormControl sx={{ minWidth: 150 }} size="small">
-                <InputLabel id="team-select-label">Team</InputLabel>
-                <Select
-                    labelId="team-select-label"
-                    id="team-select"
-                    value={selectedTeam}
-                    label="Team"
-                    onChange={handleTeamChange}
-                >
-                    <MenuItem value=""><em>All Teams</em></MenuItem>
-                    {teams.map((team) => (
-                        <MenuItem key={team.id} value={team.id}>
-                            {team.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+          <FormControl sx={{ minWidth: 120 }} size="small">
+            <InputLabel id="season-select-label">Season</InputLabel>
+            <Select
+              labelId="season-select-label"
+              id="season-select"
+              value={selectedSeason}
+              label="Season"
+              onChange={handleSeasonChange}
+            >
+              <MenuItem value=""><em>All Seasons</em></MenuItem>
+              {seasons.map((season) => (
+                <MenuItem key={season.id} value={season.id}>
+                  {season.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ minWidth: 150 }} size="small">
+            <InputLabel id="team-select-label">Team</InputLabel>
+            <Select
+              labelId="team-select-label"
+              id="team-select"
+              value={selectedTeam}
+              label="Team"
+              onChange={handleTeamChange}
+            >
+              <MenuItem value=""><em>All Teams</em></MenuItem>
+              {teams.map((team) => (
+                <MenuItem key={team.id} value={team.id}>
+                  {team.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
       </Box>
 
@@ -112,37 +112,37 @@ const Games = () => {
       ) : (
         <Grid container spacing={2}>
           {games.length === 0 ? (
-             <Grid item xs={12}>
-                <Typography variant="body1" sx={{ p: 2 }}>No games found.</Typography>
-             </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1" sx={{ p: 2 }}>No games found.</Typography>
+            </Grid>
           ) : (
-             games.map((game) => (
-                <Grid item xs={12} md={6} lg={4} key={game.id}>
-                  <Card 
-                    variant="outlined" 
-                    sx={{ '&:hover': { boxShadow: 3 }, cursor: 'pointer', textDecoration: 'none' }}
-                    component={Link}
-                    to={`/games/${game.id}`}
-                  >
-                    <CardContent>
-                      <Typography variant="caption" display="block" color="text.secondary" gutterBottom>
-                        {game.date}
-                      </Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Box sx={{ textAlign: 'center', flex: 1 }}>
-                            <Typography variant="h6">{game.homeTeam.abbreviation}</Typography>
-                            <Typography variant="h4" fontWeight="bold">{game.homeScore ?? '-'}</Typography>
-                        </Box>
-                        <Typography variant="h6" color="text.secondary" sx={{ mx: 2 }}>VS</Typography>
-                        <Box sx={{ textAlign: 'center', flex: 1 }}>
-                            <Typography variant="h6">{game.awayTeam.abbreviation}</Typography>
-                            <Typography variant="h4" fontWeight="bold">{game.awayScore ?? '-'}</Typography>
-                        </Box>
+            games.map((game) => (
+              <Grid item xs={12} md={6} lg={4} key={game.id}>
+                <Card
+                  variant="outlined"
+                  sx={{ '&:hover': { boxShadow: 3 }, cursor: 'pointer', textDecoration: 'none' }}
+                  component={Link}
+                  to={`/games/${game.id}`}
+                >
+                  <CardContent>
+                    <Typography variant="caption" display="block" color="text.secondary" gutterBottom>
+                      {game.date}
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box sx={{ textAlign: 'center', flex: 1 }}>
+                        <Typography variant="h6">{game.homeTeamName}</Typography>
+                        <Typography variant="h4" fontWeight="bold">{game.homeScore ?? '-'}</Typography>
                       </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-             ))
+                      <Typography variant="h6" color="text.secondary" sx={{ mx: 2 }}>VS</Typography>
+                      <Box sx={{ textAlign: 'center', flex: 1 }}>
+                        <Typography variant="h6">{game.awayTeamName}</Typography>
+                        <Typography variant="h4" fontWeight="bold">{game.awayScore ?? '-'}</Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))
           )}
         </Grid>
       )}

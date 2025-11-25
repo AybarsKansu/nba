@@ -5,6 +5,8 @@ import com.nba.nba.config.entity.Game;
 import com.nba.nba.config.entity.Team;
 import com.nba.nba.repository.GameRepository;
 import com.nba.nba.repository.TeamRepository;
+import com.nba.nba.repository.SeasonRepository;
+import com.nba.nba.repository.StatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +22,24 @@ public class GameService {
   @Autowired
   private TeamRepository teamRepository;
 
-  public List<Game> getRecentGames() {
-    // Assuming we want the last 5 games.
-    // Since we don't have a custom query for "last 5", we can fetch all and limit,
-    // or add a custom query. For now, let's fetch all and sort in memory (not
-    // efficient for large DBs but ok for MVP).
-    // Better: Add findTop5ByOrderByDateDesc to Repository.
-    return gameRepository.findAll().stream()
-        .sorted(Comparator.comparing(Game::getDate).reversed())
-        .limit(5)
+  @Autowired
+  private SeasonRepository seasonRepository;
+
+  @Autowired
+  private StatsRepository statsRepository;
+
+  @Autowired
+  private com.nba.nba.mapper.GameMapper gameMapper;
+
+  @Autowired
+  private com.nba.nba.mapper.SeasonMapper seasonMapper;
+
+  @Autowired
+  private com.nba.nba.mapper.StatsMapper statsMapper;
+
+  public List<com.nba.nba.dto.GameDTO> getRecentGames() {
+    return gameRepository.findTop10ByOrderByDateDesc().stream()
+        .map(gameMapper::toDTO)
         .collect(Collectors.toList());
   }
 
@@ -45,7 +56,9 @@ public class GameService {
       dto.setTeamId(team.getId());
       dto.setTeamName(team.getName());
       dto.setTeamAbbreviation(team.getAbbreviation());
-      dto.setConference(team.getDivision().getConference().getConferenceName());
+      if (team.getDivision() != null && team.getDivision().getConference() != null) {
+        dto.setConference(team.getDivision().getConference().getConferenceName());
+      }
       dto.setWins(0);
       dto.setLosses(0);
       standingsMap.put(team.getId(), dto);
@@ -59,7 +72,7 @@ public class GameService {
       StandingsDTO awayDto = standingsMap.get(game.getAwayTeam().getId());
 
       if (homeDto == null || awayDto == null)
-        continue; // Should not happen
+        continue;
 
       if (game.getHomeScore() > game.getAwayScore()) {
         homeDto.setWins(homeDto.getWins() + 1);
@@ -79,41 +92,39 @@ public class GameService {
         .collect(Collectors.toList());
   }
 
-  public Optional<Game> getGameById(Integer id) {
-    return gameRepository.findById(id);
+  public Optional<com.nba.nba.dto.GameDTO> getGameById(Integer id) {
+    return gameRepository.findById(id).map(gameMapper::toDTO);
   }
 
-  public List<Game> getTeamGames(Integer teamId) {
+  public List<com.nba.nba.dto.GameDTO> getTeamGames(Integer teamId) {
     return gameRepository.findAll().stream()
         .filter(g -> g.getHomeTeam().getId().equals(teamId) || g.getAwayTeam().getId().equals(teamId))
         .sorted(Comparator.comparing(Game::getDate))
+        .map(gameMapper::toDTO)
         .collect(Collectors.toList());
   }
 
-  public List<Game> getAllGames(Integer seasonId, Integer teamId) {
+  public List<com.nba.nba.dto.GameDTO> getAllGames(Integer seasonId, Integer teamId) {
     List<Game> games;
-    if (seasonId != null) {
+    if (seasonId != null && teamId != null) {
+      games = gameRepository.findBySeasonIdAndHomeTeamIdOrSeasonIdAndAwayTeamId(seasonId, teamId, seasonId, teamId);
+    } else if (seasonId != null) {
       games = gameRepository.findBySeasonId(seasonId);
+    } else if (teamId != null) {
+      games = gameRepository.findByHomeTeamIdOrAwayTeamId(teamId, teamId);
     } else {
       games = gameRepository.findAll();
     }
 
-    if (teamId != null) {
-      games = games.stream()
-          .filter(g -> g.getHomeTeam().getId().equals(teamId) || g.getAwayTeam().getId().equals(teamId))
-          .collect(Collectors.toList());
-    }
-
-    // Sort by date descending
-    games.sort(Comparator.comparing(Game::getDate).reversed());
-
-    return games;
+    return games.stream()
+        .sorted(Comparator.comparing(Game::getDate).reversed())
+        .map(gameMapper::toDTO)
+        .collect(Collectors.toList());
   }
 
-  @Autowired
-  private com.nba.nba.repository.SeasonRepository seasonRepository;
-
-  public List<com.nba.nba.config.entity.Season> getAllSeasons() {
-    return seasonRepository.findAll();
+  public List<com.nba.nba.dto.SeasonDTO> getAllSeasons() {
+    return seasonRepository.findAll().stream()
+        .map(seasonMapper::toDTO)
+        .collect(Collectors.toList());
   }
 }

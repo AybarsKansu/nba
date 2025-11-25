@@ -12,10 +12,10 @@ const GameDetail = () => {
         const fetchData = async () => {
             try {
                 const gameRes = await getGameById(id);
-                setGame(gameRes.data);
+                setGame(gameRes);
 
                 const boxScoreRes = await getBoxScore(id);
-                setBoxScore(boxScoreRes.data);
+                setBoxScore(boxScoreRes);
             } catch (error) {
                 console.error("Error fetching game data:", error);
             } finally {

@@ -22,12 +22,12 @@ public class TeamController {
 	private GameService gameService;
 
 	@GetMapping
-	public List<Team> getAllTeams() {
+	public List<com.nba.nba.dto.TeamDTO> getAllTeams() {
 		return teamService.getAllTeams();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Team> getTeamById(@PathVariable Integer id) {
+	public ResponseEntity<com.nba.nba.dto.TeamDTO> getTeamById(@PathVariable Integer id) {
 		return teamService.getTeamById(id)
 				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
@@ -39,7 +39,7 @@ public class TeamController {
 	}
 
 	@GetMapping("/{id}/games")
-	public List<Game> getTeamGames(@PathVariable Integer id) {
+	public List<com.nba.nba.dto.GameDTO> getTeamGames(@PathVariable Integer id) {
 		return gameService.getTeamGames(id);
 	}
 
@@ -48,9 +48,9 @@ public class TeamController {
 
 	@PostMapping
 	@com.nba.nba.security.RequireRole("ADMIN")
-	public ResponseEntity<Team> createTeam(@RequestBody Team team,
+	public ResponseEntity<com.nba.nba.dto.TeamDTO> createTeam(@RequestBody Team team,
 			jakarta.servlet.http.HttpServletRequest request) {
-		Team savedTeam = teamService.saveTeam(team);
+		com.nba.nba.dto.TeamDTO savedTeam = teamService.saveTeam(team);
 
 		Integer userId = Integer.parseInt(request.getHeader("X-User-Id"));
 		auditLogService.logAction(userId, "INSERT_TEAM", "TEAM", savedTeam.getId(),
@@ -74,7 +74,7 @@ public class TeamController {
 	private com.nba.nba.repository.DivisionRepository divisionRepository;
 
 	@GetMapping("/divisions")
-	public List<com.nba.nba.config.entity.Division> getAllDivisions() {
-		return divisionRepository.findAll();
+	public List<com.nba.nba.dto.DivisionDTO> getAllDivisions() {
+		return teamService.getAllDivisions();
 	}
 }

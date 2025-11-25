@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 
 const TeamPage = () => {
     const { id } = useParams();
-    const [team, setTeam] = useState(null);
+    const [team, setTeam] = useState([]);
     const [roster, setRoster] = useState([]);
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [seasons, setSeasons] = useState([]);
-    const [selectedSeason, setSelectedSeason] = useState(null);
+    const [selectedSeason, setSelectedSeason] = useState([]);
 
     useEffect(() => {
         const fetchSeasons = async () => {
@@ -32,7 +32,7 @@ const TeamPage = () => {
         const fetchTeam = async () => {
             try {
                 const teamRes = await getTeamById(id);
-                setTeam(teamRes.data);
+                setTeam(teamRes);
             } catch (error) {
                 console.error("Error fetching team:", error);
                 setTeam(null);
@@ -50,7 +50,7 @@ const TeamPage = () => {
             try {
                 try {
                     const rosterRes = await getTeamRoster(id, selectedSeason);
-                    setRoster(rosterRes.data);
+                    setRoster(rosterRes);
                 } catch (e) {
                     console.warn("Roster not found for season", selectedSeason);
                     setRoster([]);
@@ -58,10 +58,8 @@ const TeamPage = () => {
 
                 try {
                     const gamesRes = await getTeamGames(id);
-                    // Filter by season if possible? The game object has season?
-                    // Game entity has season.
                     const allGames = gamesRes;
-                    const seasonGames = allGames.filter(g => g.season.id === selectedSeason);
+                    const seasonGames = allGames.filter(g => g.seasonId === selectedSeason);
                     setGames(seasonGames);
                 } catch (e) {
                     console.warn("Games not found");
@@ -98,13 +96,13 @@ const TeamPage = () => {
 
             {/* Season Selector */}
             <div className="flex justify-end">
-                <select 
-                    value={selectedSeason || ''} 
+                <select
+                    value={selectedSeason || ''}
                     onChange={(e) => setSelectedSeason(Number(e.target.value))}
                     className="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                 >
                     {seasons.map(season => (
-                        <option key={season.id} value={season.id}>{season.description}</option>
+                        <option key={season.id} value={season.id}>{season.name}</option>
                     ))}
                 </select>
             </div>
@@ -152,20 +150,21 @@ const TeamPage = () => {
                     </div>
                     <div className="divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
                         {games.map((game) => {
-                            const isHome = game.homeTeam.id === team.id;
-                            const opponent = isHome ? game.awayTeam : game.homeTeam;
+                            const isHome = game.homeTeamId === team.id;
+                            const opponentId = isHome ? game.awayTeamId : game.homeTeamId;
+                            const opponentName = isHome ? game.awayTeamName : game.homeTeamName;
                             const teamScore = isHome ? game.homeScore : game.awayScore;
                             const oppScore = isHome ? game.awayScore : game.homeScore;
                             const isWin = teamScore > oppScore;
-                            
+
                             return (
                                 <div key={game.id} className="p-4 hover:bg-slate-50 transition-colors flex items-center justify-between">
                                     <div className="flex flex-col">
                                         <span className="text-xs text-slate-400 font-medium">{game.date}</span>
                                         <div className="flex items-center space-x-2 mt-1">
                                             <span className="text-xs font-bold text-slate-500">{isHome ? 'vs' : '@'}</span>
-                                            <Link to={`/teams/${opponent.id}`} className="font-bold text-slate-900 hover:text-blue-600">
-                                                {opponent.abbreviation}
+                                            <Link to={`/teams/${opponentId}`} className="font-bold text-slate-900 hover:text-blue-600">
+                                                {opponentName}
                                             </Link>
                                         </div>
                                     </div>

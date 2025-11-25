@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Container, Grid, Paper, Typography, Box, Card, CardContent, CircularProgress, Alert 
+import {
+  Container, Grid, Paper, Typography, Box, Card, CardContent, CircularProgress, Alert
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { getStandings, getRecentGames } from '../services/api';
@@ -57,13 +57,13 @@ const Dashboard = () => {
   // Add unique ID for DataGrid if not present in data
   const rows = standings.map((team, index) => {
     // team object may come in different shapes; normalize team name and numeric fields
-    const teamName = team?.team?.name || team?.teamName || team?.name || team?.abbreviation || '';
-    const wins = typeof team?.wins === 'number' ? team.wins : Number(team?.wins) || 0;
-    const losses = typeof team?.losses === 'number' ? team.losses : Number(team?.losses) || 0;
-    const winPct = typeof team?.winPct === 'number' ? team.winPct : Number(team?.winPct) || (wins + losses > 0 ? wins / (wins + losses) : 0);
+    const teamName = team.teamName || team.name || '';
+    const wins = typeof team.wins === 'number' ? team.wins : Number(team.wins) || 0;
+    const losses = typeof team.losses === 'number' ? team.losses : Number(team.losses) || 0;
+    const winPct = typeof team.winPercentage === 'number' ? team.winPercentage : (typeof team.winPct === 'number' ? team.winPct : (wins + losses > 0 ? wins / (wins + losses) : 0));
 
     return {
-      id: team?.teamId || team?.id || index,
+      id: team.teamId || team.id || index,
       teamName,
       wins,
       losses,
@@ -100,15 +100,11 @@ const Dashboard = () => {
             </Typography>
             <Grid container spacing={2}>
               {games.map((game) => {
-                const fmtDate = game?.date || game?.gameDate || '';
-                const homeTeamStr = typeof game?.homeTeam === 'object'
-                  ? (game.homeTeam.name || game.homeTeam.abbreviation || JSON.stringify(game.homeTeam))
-                  : game?.homeTeam || '';
-                const awayTeamStr = typeof game?.awayTeam === 'object'
-                  ? (game.awayTeam.name || game.awayTeam.abbreviation || JSON.stringify(game.awayTeam))
-                  : game?.awayTeam || '';
-                const homeScore = game?.homeScore ?? game?.homeTeamScore ?? '';
-                const awayScore = game?.awayScore ?? game?.awayTeamScore ?? '';
+                const fmtDate = game.date || '';
+                const homeTeamStr = game.homeTeamName || '';
+                const awayTeamStr = game.awayTeamName || '';
+                const homeScore = game.homeScore ?? '';
+                const awayScore = game.awayScore ?? '';
 
                 return (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={game.id}>

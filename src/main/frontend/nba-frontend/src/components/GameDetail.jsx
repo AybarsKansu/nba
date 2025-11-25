@@ -16,13 +16,20 @@ const GameDetail = () => {
       axios.get(`http://localhost:8080/api/stats?gameId=${id}`)
     ])
       .then(([gameRes, statsRes]) => {
-        setGame(gameRes.data);
-        const stats = statsRes.data;
-        setHomeTeamStats(stats.filter(s => s.team_id === gameRes.data.home_team_id));
-        setAwayTeamStats(stats.filter(s => s.team_id === gameRes.data.away_team_id));
+        const gameData = gameRes.data;
+        const statsData = statsRes.data;
+
+        setGame(gameData);
+        const homeTeamId = gameData.homeTeam?.id;
+        const awayTeamId = gameData.awayTeam?.id;
+
+        setHomeTeamStats(statsData.filter(s => s.team?.id === homeTeamId));
+        setAwayTeamStats(statsData.filter(s => s.team?.id === awayTeamId));
+
         setLoading(false);
       })
       .catch(err => {
+        console.error(err);
         setError(err.message);
         setLoading(false);
       });
@@ -34,9 +41,11 @@ const GameDetail = () => {
   return (
     <div className="container">
       <Link to="/games">← Geri Dön</Link>
-      <h2>{game?.home_team} {game?.home_score} - {game?.away_score} {game?.away_team}</h2>
-      
-      <h3>{game?.home_team}</h3>
+      <h2>
+        {game?.homeTeam?.name} {game?.homeScore} - {game?.awayScore} {game?.awayTeam?.name}
+      </h2>
+
+      <h3>{game?.homeTeam?.name}</h3>
       <table className="stats-table">
         <thead>
           <tr>
