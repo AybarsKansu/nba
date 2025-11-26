@@ -10,4 +10,6 @@ public class CreateGameDTO {
   private Integer awayTeamId;
   private Integer seasonId;
   private String gameType; // e.g., "Regular Season", "Playoff"
+  private Integer homeScore;
+  private Integer awayScore;
 }

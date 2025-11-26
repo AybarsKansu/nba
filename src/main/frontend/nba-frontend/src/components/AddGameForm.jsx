@@ -10,7 +10,9 @@ const AddGameForm = ({ onSuccess }) => {
     homeTeamId: '',
     awayTeamId: '',
     seasonId: '',
-    gameType: 'Regular Season'
+    gameType: 'Regular Season',
+    homeScore: '',
+    awayScore: ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -51,7 +53,9 @@ const AddGameForm = ({ onSuccess }) => {
         homeTeamId: '',
         awayTeamId: '',
         seasonId: '',
-        gameType: 'Regular Season'
+        gameType: 'Regular Season',
+        homeScore: '',
+        awayScore: ''
       });
       if (onSuccess) onSuccess();
     } catch (err) {
@@ -138,6 +142,25 @@ const AddGameForm = ({ onSuccess }) => {
         required
         sx={{ mb: 2 }}
       />
+
+      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+        <TextField
+          fullWidth
+          label="Home Score"
+          type="number"
+          name="homeScore"
+          value={formData.homeScore}
+          onChange={handleChange}
+        />
+        <TextField
+          fullWidth
+          label="Away Score"
+          type="number"
+          name="awayScore"
+          value={formData.awayScore}
+          onChange={handleChange}
+        />
+      </Box>
 
       <Button type="submit" variant="contained" color="primary">
         Add Game

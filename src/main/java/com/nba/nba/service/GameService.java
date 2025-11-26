@@ -142,6 +142,8 @@ public class GameService {
     game.setHomeTeam(homeTeam);
     game.setAwayTeam(awayTeam);
     game.setSeason(season);
+    game.setHomeScore(dto.getHomeScore());
+    game.setAwayScore(dto.getAwayScore());
 
     Game savedGame = gameRepository.save(game);
     return gameMapper.toDTO(savedGame);
