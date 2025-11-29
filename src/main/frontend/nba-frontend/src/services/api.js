@@ -66,4 +66,14 @@ export const createGame = (game) => api.post('/games', game).then(res => res.dat
 export const deleteGame = (id) => api.delete(`/games/${id}`).then(res => res.data);
 export const getAllDivisions = () => api.get('/teams/divisions').then(res => res.data);
 
+// Analysis Endpoints
+export const getSeasonStats = () => api.get('/analysis/season-stats').then(res => res.data);
+export const getTripleDoubles = (seasonId) => api.get(`/analysis/triple-doubles?seasonId=${seasonId}`).then(res => res.data);
+export const getConsistency = (seasonId) => api.get(`/analysis/consistency?seasonId=${seasonId}`).then(res => res.data);
+export const getEfficiency = (seasonId, topN = 10) => api.get(`/analysis/efficiency?seasonId=${seasonId}&topN=${topN}`).then(res => res.data);
+export const getShootingEfficiency = (seasonId) => api.get(`/analysis/shooting-efficiency?seasonId=${seasonId}`).then(res => res.data);
+export const getPointsLeaders = (seasonId, limit = 5) => api.get(`/analysis/leaders/points?seasonId=${seasonId}&limit=${limit}`).then(res => res.data);
+export const getReboundsLeaders = (seasonId, limit = 5) => api.get(`/analysis/leaders/rebounds?seasonId=${seasonId}&limit=${limit}`).then(res => res.data);
+export const getAssistsLeaders = (seasonId, limit = 5) => api.get(`/analysis/leaders/assists?seasonId=${seasonId}&limit=${limit}`).then(res => res.data);
+
 export default api;

@@ -1,15 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Container, Grid, Paper, Typography, Box, Card, CardContent, CircularProgress, Alert
+  Container, Grid, Paper, Typography, Box, Card, CardContent, CircularProgress, Alert, Button
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { getStandings, getRecentGames } from '../services/api';
+import { getStandings, getRecentGames, getAllSeasons } from '../services/api';
+import LeadersSection from '../components/LeadersSection';
+import AdvancedAnalysisModal from '../components/AdvancedAnalysisModal';
 
 const Dashboard = () => {
   const [standings, setStandings] = useState([]);
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [seasonId, setSeasonId] = useState(null);
+  const [analysisOpen, setAnalysisOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchSeasons = async () => {
+      try {
+        const seasons = await getAllSeasons();
+        if (seasons && seasons.length > 0) {
+          // Sort by ID descending to get latest
+          const sorted = [...seasons].sort((a, b) => b.id - a.id);
+          setSeasonId(sorted[0].id);
+        }
+      } catch (e) {
+        console.error("Failed to fetch seasons", e);
+      }
+    };
+    fetchSeasons();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,6 +129,23 @@ const Dashboard = () => {
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Typography component="h1" variant="h4" color="primary">
+          Dashboard
+        </Typography>
+        <Button variant="contained" color="secondary" onClick={() => setAnalysisOpen(true)}>
+          Advanced Analysis
+        </Button>
+      </Box>
+
+      {seasonId && <LeadersSection seasonId={seasonId} />}
+
+      <AdvancedAnalysisModal
+        open={analysisOpen}
+        onClose={() => setAnalysisOpen(false)}
+        seasonId={seasonId}
+      />
+
       <Grid container spacing={3}>
         {/* Recent Games Section */}
         <Grid item xs={12}>
