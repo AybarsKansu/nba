@@ -37,37 +37,11 @@ public class AnalysisDTOs {
 
     Integer getAssists();
 
+    Integer getSteals();
+
+    Integer getBlocks();
+
     String getTeamName();
-  }
-
-  public interface ConsistencyProjection {
-    String getPlayerName();
-
-    String getPlayerSurname();
-
-    Double getAvgPoints();
-
-    Double getPointsStddev();
-
-    Long getGamesPlayed();
-
-    Double getConsistencyScore();
-  }
-
-  public interface EfficiencyProjection {
-    String getPlayerName();
-
-    String getPlayerSurname();
-
-    Long getGames();
-
-    Double getEfficiency();
-
-    Double getPpg();
-
-    Double getRpg();
-
-    Double getApg();
   }
 
   public interface ShootingEfficiencyProjection {
@@ -88,5 +62,31 @@ public class AnalysisDTOs {
     Double getThreePct();
 
     Double getTsPct();
+  }
+
+  public interface DefensiveLeadersProjection {
+    String getPlayerName();
+
+    String getPlayerSurname();
+
+    String getSeason();
+
+    Long getGamesPlayed();
+
+    Double getAvgValue();
+  }
+
+  public interface TeamSeasonPerformanceProjection {
+    String getTeamName();
+
+    String getSeason();
+
+    Long getGamesPlayed();
+
+    Double getAvgPointsScored();
+
+    Double getAvgPointsAllowed();
+
+    Long getWins();
   }
 }

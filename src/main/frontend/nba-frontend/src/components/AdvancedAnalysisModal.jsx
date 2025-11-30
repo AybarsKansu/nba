@@ -5,15 +5,18 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import {
-  getSeasonStats, getTripleDoubles, getConsistency, getEfficiency, getShootingEfficiency
+  getSeasonStats, getTripleDoubles, getDoubleDoubles, getShootingEfficiency,
+  getBlocksLeaders, getStealsLeaders, getTeamSeasonPerformance
 } from '../services/api';
 
 const ANALYSIS_TYPES = [
   { id: 'seasonStats', label: 'Season Stats (Sorted by Points)' },
   { id: 'tripleDoubles', label: 'Triple Double Players' },
-  { id: 'consistency', label: 'Most Consistent Players' },
-  { id: 'efficiency', label: 'Player Efficiency Rating' },
+  { id: 'doubleDoubles', label: 'Double Double Players' },
   { id: 'shootingEfficiency', label: 'Shooting Efficiency Analysis' },
+  { id: 'blocksLeaders', label: 'Blocks Leaders' },
+  { id: 'stealsLeaders', label: 'Steals Leaders' },
+  { id: 'teamPerformance', label: 'Team Season Performance' },
 ];
 
 const AdvancedAnalysisModal = ({ open, onClose, seasonId }) => {
@@ -38,14 +41,20 @@ const AdvancedAnalysisModal = ({ open, onClose, seasonId }) => {
         case 'tripleDoubles':
           result = await getTripleDoubles(seasonId);
           break;
-        case 'consistency':
-          result = await getConsistency(seasonId);
-          break;
-        case 'efficiency':
-          result = await getEfficiency(seasonId);
+        case 'doubleDoubles':
+          result = await getDoubleDoubles(seasonId);
           break;
         case 'shootingEfficiency':
           result = await getShootingEfficiency(seasonId);
+          break;
+        case 'blocksLeaders':
+          result = await getBlocksLeaders(seasonId, 10);
+          break;
+        case 'stealsLeaders':
+          result = await getStealsLeaders(seasonId, 10);
+          break;
+        case 'teamPerformance':
+          result = await getTeamSeasonPerformance(seasonId);
           break;
         default:
           break;
@@ -84,24 +93,10 @@ const AdvancedAnalysisModal = ({ open, onClose, seasonId }) => {
           { field: 'points', headerName: 'Pts', type: 'number', width: 80 },
           { field: 'rebounds', headerName: 'Reb', type: 'number', width: 80 },
           { field: 'assists', headerName: 'Ast', type: 'number', width: 80 },
+          { field: 'steals', headerName: 'Stl', type: 'number', width: 80 },
+          { field: 'blocks', headerName: 'Blk', type: 'number', width: 80 },
         ];
-      case 'consistency':
-        return [
-          ...common,
-          { field: 'avgPoints', headerName: 'Avg Pts', type: 'number', width: 100 },
-          { field: 'pointsStddev', headerName: 'Std Dev', type: 'number', width: 100 },
-          { field: 'gamesPlayed', headerName: 'GP', type: 'number', width: 80 },
-          { field: 'consistencyScore', headerName: 'Score', type: 'number', width: 100 },
-        ];
-      case 'efficiency':
-        return [
-          ...common,
-          { field: 'efficiency', headerName: 'EFF', type: 'number', width: 100 },
-          { field: 'games', headerName: 'GP', type: 'number', width: 80 },
-          { field: 'ppg', headerName: 'PPG', type: 'number', width: 90 },
-          { field: 'rpg', headerName: 'RPG', type: 'number', width: 90 },
-          { field: 'apg', headerName: 'APG', type: 'number', width: 90 },
-        ];
+
       case 'shootingEfficiency':
         return [
           ...common,
@@ -112,6 +107,34 @@ const AdvancedAnalysisModal = ({ open, onClose, seasonId }) => {
           { field: 'total3pa', headerName: '3PA', type: 'number', width: 80 },
           { field: 'threePct', headerName: '3P%', type: 'number', width: 90 },
           { field: 'tsPct', headerName: 'TS%', type: 'number', width: 90 },
+        ];
+      case 'doubleDoubles':
+        return [
+          ...common,
+          { field: 'date', headerName: 'Date', width: 110 },
+          { field: 'teamName', headerName: 'Team', width: 150 },
+          { field: 'points', headerName: 'Pts', type: 'number', width: 80 },
+          { field: 'rebounds', headerName: 'Reb', type: 'number', width: 80 },
+          { field: 'assists', headerName: 'Ast', type: 'number', width: 80 },
+          { field: 'steals', headerName: 'Stl', type: 'number', width: 80 },
+          { field: 'blocks', headerName: 'Blk', type: 'number', width: 80 },
+        ];
+      case 'blocksLeaders':
+      case 'stealsLeaders':
+        return [
+          ...common,
+          { field: 'season', headerName: 'Season', width: 100 },
+          { field: 'gamesPlayed', headerName: 'GP', type: 'number', width: 80 },
+          { field: 'avgValue', headerName: 'Avg', type: 'number', width: 100 },
+        ];
+      case 'teamPerformance':
+        return [
+          { field: 'teamName', headerName: 'Team', width: 150 },
+          { field: 'season', headerName: 'Season', width: 100 },
+          { field: 'gamesPlayed', headerName: 'GP', type: 'number', width: 80 },
+          { field: 'wins', headerName: 'Wins', type: 'number', width: 80 },
+          { field: 'avgPointsScored', headerName: 'PTS Scored', type: 'number', width: 110 },
+          { field: 'avgPointsAllowed', headerName: 'PTS Allowed', type: 'number', width: 110 },
         ];
       default:
         return [];

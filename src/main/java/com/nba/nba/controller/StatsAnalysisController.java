@@ -27,16 +27,9 @@ public class StatsAnalysisController {
     return ResponseEntity.ok(statsRepository.findTripleDoubles(seasonId));
   }
 
-  @GetMapping("/consistency")
-  public ResponseEntity<List<ConsistencyProjection>> getConsistency(@RequestParam Integer seasonId) {
-    return ResponseEntity.ok(statsRepository.findMostConsistentPlayers(seasonId));
-  }
-
-  @GetMapping("/efficiency")
-  public ResponseEntity<List<EfficiencyProjection>> getEfficiency(
-      @RequestParam Integer seasonId,
-      @RequestParam(defaultValue = "10") Integer topN) {
-    return ResponseEntity.ok(statsRepository.findEfficientPlayers(seasonId, topN));
+  @GetMapping("/double-doubles")
+  public ResponseEntity<List<TripleDoubleProjection>> getDoubleDoubles(@RequestParam Integer seasonId) {
+    return ResponseEntity.ok(statsRepository.findDoubleDoubles(seasonId));
   }
 
   @GetMapping("/shooting-efficiency")
@@ -63,5 +56,25 @@ public class StatsAnalysisController {
       @RequestParam Integer seasonId,
       @RequestParam(defaultValue = "5") Integer limit) {
     return ResponseEntity.ok(statsRepository.findAssistsLeaders(seasonId, limit));
+  }
+
+  @GetMapping("/leaders/blocks")
+  public ResponseEntity<List<DefensiveLeadersProjection>> getBlocksLeaders(
+      @RequestParam Integer seasonId,
+      @RequestParam(defaultValue = "5") Integer limit) {
+    return ResponseEntity.ok(statsRepository.findBlocksLeaders(seasonId, limit));
+  }
+
+  @GetMapping("/leaders/steals")
+  public ResponseEntity<List<DefensiveLeadersProjection>> getStealsLeaders(
+      @RequestParam Integer seasonId,
+      @RequestParam(defaultValue = "5") Integer limit) {
+    return ResponseEntity.ok(statsRepository.findStealsLeaders(seasonId, limit));
+  }
+
+  @GetMapping("/team-performance")
+  public ResponseEntity<List<TeamSeasonPerformanceProjection>> getTeamSeasonPerformance(
+      @RequestParam Integer seasonId) {
+    return ResponseEntity.ok(statsRepository.findTeamSeasonPerformance(seasonId));
   }
 }

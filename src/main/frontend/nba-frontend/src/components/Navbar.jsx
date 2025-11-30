@@ -1,12 +1,22 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, Container } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, Container, Menu, MenuItem } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import SportsBasketballIcon from '@mui/icons-material/SportsBasketball';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [anchorElAwards, setAnchorElAwards] = React.useState(null);
+
+  const handleOpenAwardsMenu = (event) => {
+    setAnchorElAwards(event.currentTarget);
+  };
+
+  const handleCloseAwardsMenu = () => {
+    setAnchorElAwards(null);
+  };
 
   const handleLogout = () => {
     logout();
@@ -49,6 +59,39 @@ const Navbar = () => {
             <Button component={RouterLink} to="/games" sx={{ my: 2, color: 'white', display: 'block' }}>
               Games
             </Button>
+            <Button
+              onClick={handleOpenAwardsMenu}
+              sx={{ my: 2, color: 'white', display: 'flex', alignItems: 'center' }}
+              endIcon={<KeyboardArrowDownIcon />}
+            >
+              Awards
+            </Button>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar-awards"
+              anchorEl={anchorElAwards}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElAwards)}
+              onClose={handleCloseAwardsMenu}
+            >
+              <MenuItem component={RouterLink} to="/awards/MVP" onClick={handleCloseAwardsMenu}>
+                <Typography textAlign="center">MVP Winners</Typography>
+              </MenuItem>
+              <MenuItem component={RouterLink} to="/awards/DPOY" onClick={handleCloseAwardsMenu}>
+                <Typography textAlign="center">DPOY Winners</Typography>
+              </MenuItem>
+              <MenuItem component={RouterLink} to="/awards/FMVP" onClick={handleCloseAwardsMenu}>
+                <Typography textAlign="center">FMVP Winners</Typography>
+              </MenuItem>
+            </Menu>
             {user?.role === 'ADMIN' && (
               <Button component={RouterLink} to="/admin" sx={{ my: 2, color: 'white', display: 'block', border: '1px solid white', ml: 2 }}>
                 Admin

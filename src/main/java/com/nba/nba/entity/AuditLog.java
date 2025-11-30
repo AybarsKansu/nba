@@ -34,6 +34,7 @@ public class AuditLog {
   @Column(columnDefinition = "TEXT")
   private String description;
 
-  @Column(name = "action_time", insertable = false, updatable = false)
+  @org.hibernate.annotations.CreationTimestamp
+  @Column(name = "action_time", nullable = false, updatable = false)
   private LocalDateTime actionTime;
 }

@@ -16,6 +16,7 @@ import Games from './pages/Games';
 import GameDetail from './pages/GameDetail';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
+import AwardsPage from './pages/AwardsPage';
 // ------------------------------------------------------------------------
 
 // Tema ayarları burada düzgün bir değişkene atandı
@@ -66,6 +67,9 @@ function App() {
             {/* Game Routes */}
             <Route path="/games" element={<Games />} />
             <Route path="/games/:id" element={<GameDetail />} />
+
+            {/* Awards Route */}
+            <Route path="/awards/:type" element={<AwardsPage />} />
 
             {/* Admin Route */}
             <Route path="/admin" element={<AdminPage />} />

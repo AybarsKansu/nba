@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPlayerById, getPlayerStats, getGameLog, getAllSeasons } from '../services/api';
+import { getPlayerById, getPlayerStats, getGameLog, getAllSeasons, getPlayerAwards } from '../services/api';
 
 const PlayerProfile = () => {
     const { id } = useParams();
@@ -10,6 +10,7 @@ const PlayerProfile = () => {
     const [loading, setLoading] = useState(true);
     const [seasons, setSeasons] = useState([]);
     const [selectedSeason, setSelectedSeason] = useState(null);
+    const [awards, setAwards] = useState([]);
 
     useEffect(() => {
         const fetchSeasons = async () => {
@@ -32,6 +33,14 @@ const PlayerProfile = () => {
             try {
                 const playerRes = await getPlayerById(id);
                 setPlayer(playerRes);
+
+                // Fetch awards
+                try {
+                    const awardsRes = await getPlayerAwards(id);
+                    setAwards(awardsRes);
+                } catch (e) {
+                    console.warn("Awards fetch failed", e);
+                }
             } catch (error) {
                 console.error("Error fetching player:", error);
                 setPlayer(null);
@@ -117,8 +126,27 @@ const PlayerProfile = () => {
                 <StatCard label="PPG" value={stats?.pointsPerGame} />
                 <StatCard label="RPG" value={stats?.reboundsPerGame} />
                 <StatCard label="APG" value={stats?.assistsPerGame} />
+                <StatCard label="SPG" value={stats?.stealsPerGame} />
+                <StatCard label="BPG" value={stats?.blocksPerGame} />
                 <StatCard label="FG%" value={stats?.fieldGoalPercentage ? `${(stats.fieldGoalPercentage * 100).toFixed(1)}%` : '-'} />
+                <StatCard label="3P%" value={stats?.threePointPercentage ? `${(stats.threePointPercentage * 100).toFixed(1)}%` : '-'} />
+                <StatCard label="FT%" value={stats?.freeThrowPercentage ? `${(stats.freeThrowPercentage * 100).toFixed(1)}%` : '-'} />
             </div>
+
+            {/* Career Awards */}
+            {awards.length > 0 && (
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h2 className="text-lg font-bold text-slate-800 mb-4">Career Awards</h2>
+                    <div className="flex flex-wrap gap-3">
+                        {awards.map((award, index) => (
+                            <div key={index} className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2 flex items-center space-x-2">
+                                <span className="font-bold text-yellow-700">{award.seasonName}</span>
+                                <span className="text-yellow-900 font-semibold">| {award.awardType}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Game Log */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
