@@ -16,7 +16,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
         List<Stats> findByGameId(Integer gameId);
 
         // 1. Season Stats (Sorted by Points)
-        // 1. Season Stats (Sorted by Points)
         @Query(value = "SELECT " +
                         "player_name as playerName, " +
                         "player_surname as playerSurname, " +
@@ -84,7 +83,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
         List<com.nba.nba.dto.AnalysisDTOs.TripleDoubleProjection> findDoubleDoubles(Integer seasonId);
 
         // Leaders - Blocks
-        // Leaders - Blocks
         @Query(value = "SELECT " +
                         "player_name as playerName, " +
                         "player_surname as playerSurname, " +
@@ -98,7 +96,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
         List<com.nba.nba.dto.AnalysisDTOs.DefensiveLeadersProjection> findBlocksLeaders(Integer seasonId,
                         Integer limit);
 
-        // Leaders - Steals
         // Leaders - Steals
         @Query(value = "SELECT " +
                         "player_name as playerName, " +
@@ -114,7 +111,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
                         Integer limit);
 
         // Team Season Performance
-        // Team Season Performance
         @Query(value = "SELECT " +
                         "team_name AS teamName, " +
                         "season_name AS season, " +
@@ -127,7 +123,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
                         "ORDER BY wins DESC", nativeQuery = true)
         List<com.nba.nba.dto.AnalysisDTOs.TeamSeasonPerformanceProjection> findTeamSeasonPerformance(Integer seasonId);
 
-        // 5. Shooting Efficiency
         // 5. Shooting Efficiency
         @Query(value = "SELECT " +
                         "player_name as playerName, " +
@@ -145,7 +140,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
                         "ORDER BY ts_pct DESC", nativeQuery = true)
         List<com.nba.nba.dto.AnalysisDTOs.ShootingEfficiencyProjection> findShootingEfficiency(Integer seasonId);
 
-        // Leaders - Points
         // Leaders - Points
         @Query(value = "SELECT " +
                         "player_name as playerName, " +
@@ -165,7 +159,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
                         Integer limit);
 
         // Leaders - Rebounds
-        // Leaders - Rebounds
         @Query(value = "SELECT " +
                         "player_name as playerName, " +
                         "player_surname as playerSurname, " +
@@ -183,7 +176,6 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
         List<com.nba.nba.dto.AnalysisDTOs.PlayerSeasonStatsProjection> findReboundsLeaders(Integer seasonId,
                         Integer limit);
 
-        // Leaders - Assists
         // Leaders - Assists
         @Query(value = "SELECT " +
                         "player_name as playerName, " +

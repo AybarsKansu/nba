@@ -1,6 +1,7 @@
 package com.nba.nba.controller;
 
 import com.nba.nba.dto.PlayerStatsDTO;
+import com.nba.nba.dto.PlayerWithRosterDTO;
 import com.nba.nba.entity.Player;
 import com.nba.nba.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,17 @@ public class PlayerController {
 	private PlayerService playerService;
 
 	@GetMapping
-	public List<Player> getAllPlayers() {
-		return playerService.getAllPlayers();
+	public List<PlayerWithRosterDTO> getAllPlayers() {
+		return playerService.getAllPlayersWithRoster();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Player> getPlayerById(@PathVariable Integer id) {
-		return playerService.getPlayerById(id)
-				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<PlayerWithRosterDTO> getPlayerById(@PathVariable Integer id) {
+		PlayerWithRosterDTO player = playerService.getPlayerWithRosterById(id);
+		if (player == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(player);
 	}
 
 	@GetMapping("/{id}/stats")

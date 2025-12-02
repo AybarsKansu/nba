@@ -10,7 +10,7 @@ import {
 } from '../services/api';
 
 const ANALYSIS_TYPES = [
-  { id: 'seasonStats', label: 'Season Stats (Sorted by Points)' },
+  { id: 'seasonStats', label: 'Season Stats' },
   { id: 'tripleDoubles', label: 'Triple Double Players' },
   { id: 'doubleDoubles', label: 'Double Double Players' },
   { id: 'shootingEfficiency', label: 'Shooting Efficiency Analysis' },
