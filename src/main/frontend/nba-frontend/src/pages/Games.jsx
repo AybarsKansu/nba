@@ -5,6 +5,8 @@ import {
 import { getAllGames, getAllSeasons, getAllTeams } from '../services/api';
 import { Link } from 'react-router-dom';
 
+import { getTeamLogo } from '../utils/logoMapper';
+
 const Games = () => {
   const [games, setGames] = useState([]);
   const [seasons, setSeasons] = useState([]);
@@ -129,14 +131,30 @@ const Games = () => {
                       {game.date}
                     </Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
-                      <Box sx={{ textAlign: 'center', flex: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{game.homeTeamName}</Typography>
-                        <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold' }}>{game.homeScore ?? '-'}</Typography>
+                      <Box sx={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }} title={game.homeTeamName}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold', fontSize: '0.75rem' }}>{game.homeTeamName}</Typography>
+                        {getTeamLogo(game.homeTeamAbbreviation) && (
+                          <img
+                            src={getTeamLogo(game.homeTeamAbbreviation)}
+                            alt={game.homeTeamName}
+                            style={{ width: 50, height: 50, objectFit: 'contain' }}
+                            onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
+                          />
+                        )}
+                        <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold', mt: 1 }}>{game.homeScore ?? '-'}</Typography>
                       </Box>
                       <Typography variant="h6" color="text.secondary" sx={{ mx: 2 }}>VS</Typography>
-                      <Box sx={{ textAlign: 'center', flex: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.secondary' }}>{game.awayTeamName}</Typography>
-                        <Typography variant="h4" color="text.secondary" sx={{ fontWeight: 'bold' }}>{game.awayScore ?? '-'}</Typography>
+                      <Box sx={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }} title={game.awayTeamName}>
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold', fontSize: '0.75rem', color: 'text.secondary' }}>{game.awayTeamName}</Typography>
+                        {getTeamLogo(game.awayTeamAbbreviation) && (
+                          <img
+                            src={getTeamLogo(game.awayTeamAbbreviation)}
+                            alt={game.awayTeamName}
+                            style={{ width: 50, height: 50, objectFit: 'contain' }}
+                            onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
+                          />
+                        )}
+                        <Typography variant="h4" color="text.secondary" sx={{ fontWeight: 'bold', mt: 1 }}>{game.awayScore ?? '-'}</Typography>
                       </Box>
                     </Box>
                   </CardContent>

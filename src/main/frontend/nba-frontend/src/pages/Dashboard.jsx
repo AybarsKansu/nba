@@ -6,6 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { getStandings, getRecentGames, getAllSeasons } from '../services/api';
 import LeadersSection from '../components/LeadersSection';
 import AdvancedAnalysisModal from '../components/AdvancedAnalysisModal';
+import { getTeamLogo } from '../utils/logoMapper';
 
 const Dashboard = () => {
   const [standings, setStandings] = useState([]);
@@ -56,6 +57,7 @@ const Dashboard = () => {
 
         setStandings(normalizedStandings);
         setGames(normalizedGames);
+        console.log(normalizedGames)
       } catch (err) {
         setError('Failed to load dashboard data');
         console.error(err);
@@ -160,7 +162,6 @@ const Dashboard = () => {
                 const awayTeamStr = game.awayTeamName || '';
                 const homeScore = game.homeScore ?? '';
                 const awayScore = game.awayScore ?? '';
-
                 return (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={game.id}>
                     <Card elevation={3} sx={{ borderRadius: 2, border: '1px solid #e0e0e0', transition: '0.3s', '&:hover': { boxShadow: 6 } }}>

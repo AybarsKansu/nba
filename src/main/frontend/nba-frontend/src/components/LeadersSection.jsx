@@ -18,7 +18,15 @@ const LeaderCard = ({ title, leaders, valueKey, loading }) => (
             <Typography variant="h5" sx={{ width: 30, color: 'text.secondary', fontWeight: 'bold' }}>
               {index + 1}
             </Typography>
-            <Box sx={{ flexGrow: 1, ml: 1 }}>
+            <Avatar
+              src={`/nba_players/${player.playerName}_${player.playerSurname}.png`}
+              alt={`${player.playerName} ${player.playerSurname}`}
+              sx={{ width: 40, height: 40, mr: 2, bgcolor: '#f0f0f0' }}
+              imgProps={{
+                onError: (e) => { e.target.onerror = null; e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cmVjdCB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIGZpbGw9IiNlZWVlZWUiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM5OTk5OTkiPj88L3RleHQ+PC9zdmc+'; }
+              }}
+            />
+            <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                 {player.playerName} {player.playerSurname}
               </Typography>

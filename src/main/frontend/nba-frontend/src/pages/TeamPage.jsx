@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTeamById, getTeamRoster, getTeamGames, getAllSeasons } from '../services/api';
 import { Link } from 'react-router-dom';
+import { getTeamLogo } from '../utils/logoMapper';
 
 const TeamPage = () => {
     const { id } = useParams();
@@ -84,12 +85,20 @@ const TeamPage = () => {
     return (
         <div className="container mx-auto p-6 space-y-8">
             {/* Header */}
-            <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl shadow-lg p-8 text-white flex justify-between items-center">
-                <div>
-                    <h1 className="text-5xl font-black tracking-tight">{team.name}</h1>
-                    <p className="text-xl text-slate-300 mt-2">{team.city} • {team.abbreviation}</p>
+            <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl shadow-lg p-8 text-white flex justify-between items-center relative overflow-hidden">
+                <div className="flex items-center space-x-8 z-10">
+                    <img
+                        src={getTeamLogo(team.abbreviation)}
+                        alt={team.name}
+                        className="w-32 h-32 object-contain bg-white/10 rounded-full p-4 backdrop-blur-sm"
+                        onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
+                    />
+                    <div>
+                        <h1 className="text-5xl font-black tracking-tight">{team.name}</h1>
+                        <p className="text-xl text-slate-300 mt-2">{team.city} • {team.abbreviation}</p>
+                    </div>
                 </div>
-                <div className="text-9xl font-black text-white opacity-10 hidden md:block">
+                <div className="text-9xl font-black text-white opacity-5 absolute right-0 -mr-10 pointer-events-none">
                     {team.abbreviation}
                 </div>
             </div>

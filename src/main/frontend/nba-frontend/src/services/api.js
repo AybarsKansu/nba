@@ -48,7 +48,11 @@ export const addFavoriteTeam = (teamId) => api.post(`/favorites/team/${teamId}`)
 export const removeFavoriteTeam = (teamId) => api.delete(`/favorites/team/${teamId}`).then(res => res.data);
 export const addFavoritePlayer = (playerId) => api.post(`/favorites/player/${playerId}`).then(res => res.data);
 export const removeFavoritePlayer = (playerId) => api.delete(`/favorites/player/${playerId}`).then(res => res.data);
-export const getMyProfile = () => api.get('/my-profile').then(res => res.data);
+export const getMyProfile = () => {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return Promise.resolve(null);
+    return api.get('/my-profile').then(res => res.data);
+};
 export const getAllGames = (seasonId, teamId) => {
     const params = new URLSearchParams();
     if (seasonId) params.append('seasonId', seasonId);

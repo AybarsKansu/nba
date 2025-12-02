@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getBoxScore, getGameById } from '../services/api';
+import { getTeamLogo } from '../utils/logoMapper';
 
 const GameDetail = () => {
     const { id } = useParams();
@@ -33,8 +34,6 @@ const GameDetail = () => {
 
     if (!game) return <div className="text-center p-10 text-slate-500">Game not found</div>;
 
-    if (!game) return <div className="text-center p-10 text-slate-500">Game not found</div>;
-
     const homeStats = boxScore.filter(stat => stat.teamId === game.homeTeamId);
     const awayStats = boxScore.filter(stat => stat.teamId === game.awayTeamId);
 
@@ -43,11 +42,18 @@ const GameDetail = () => {
             {/* Scoreboard */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
                 <div className="flex justify-between items-center text-center">
-                    <div className="flex-1">
+                    <div className="flex-1 flex flex-col items-center">
+                        {getTeamLogo(game.homeTeamAbbreviation) && (
+                            <img
+                                src={getTeamLogo(game.homeTeamAbbreviation)}
+                                alt={game.homeTeamName}
+                                className="w-24 h-24 object-contain mb-4"
+                                onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
+                            />
+                        )}
                         <Link to={`/teams/${game.homeTeamId}`} className="text-3xl font-black text-slate-900 hover:text-blue-600 block">
                             {game.homeTeamName}
                         </Link>
-                        <div className="text-slate-500 text-sm mt-1">{game.homeTeamName}</div>
                     </div>
                     <div className="px-8">
                         <div className="text-5xl font-black text-slate-900 tracking-tight">
@@ -55,27 +61,42 @@ const GameDetail = () => {
                         </div>
                         <div className="text-slate-400 font-medium mt-2 uppercase tracking-wider text-sm">{game.gameType} • Final</div>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 flex flex-col items-center">
+                        {getTeamLogo(game.awayTeamAbbreviation) && (
+                            <img
+                                src={getTeamLogo(game.awayTeamAbbreviation)}
+                                alt={game.awayTeamName}
+                                className="w-24 h-24 object-contain mb-4"
+                                onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
+                            />
+                        )}
                         <Link to={`/teams/${game.awayTeamId}`} className="text-3xl font-black text-slate-900 hover:text-blue-600 block">
                             {game.awayTeamName}
                         </Link>
-                        <div className="text-slate-500 text-sm mt-1">{game.awayTeamName}</div>
                     </div>
                 </div>
             </div>
 
             {/* Box Scores */}
             <div className="grid grid-cols-1 gap-8">
-                <BoxScoreTable teamName={game.homeTeamName} stats={homeStats} />
-                <BoxScoreTable teamName={game.awayTeamName} stats={awayStats} />
+                <BoxScoreTable teamName={game.homeTeamName} stats={homeStats} teamAbbreviation={game.homeTeamAbbreviation} />
+                <BoxScoreTable teamName={game.awayTeamName} stats={awayStats} teamAbbreviation={game.awayTeamAbbreviation} />
             </div>
         </div>
     );
 };
 
-const BoxScoreTable = ({ teamName, stats }) => (
+const BoxScoreTable = ({ teamName, stats, teamAbbreviation }) => (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50">
+        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+            {teamAbbreviation && (
+                <img
+                    src={getTeamLogo(teamAbbreviation)}
+                    alt={teamName}
+                    className="w-10 h-10 object-contain"
+                    onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
+                />
+            )}
             <h2 className="text-lg font-bold text-slate-800">{teamName} Box Score</h2>
         </div>
         <div className="overflow-x-auto">
