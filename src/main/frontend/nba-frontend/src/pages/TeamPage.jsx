@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getTeamById, getTeamRoster, getTeamGames, getAllSeasons } from '../services/api';
+import { getTeamById, getTeamRoster, getTeamGames, getAllSeasons, addFavoriteTeam, removeFavoriteTeam, getMyProfile } from '../services/api';
 import { Link } from 'react-router-dom';
 import { getTeamLogo } from '../utils/logoMapper';
+import { useAuth } from '../context/AuthContext';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { IconButton } from '@mui/material';
 
 const TeamPage = () => {
     const { id } = useParams();
@@ -12,6 +16,8 @@ const TeamPage = () => {
     const [loading, setLoading] = useState(true);
     const [seasons, setSeasons] = useState([]);
     const [selectedSeason, setSelectedSeason] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchSeasons = async () => {
@@ -28,6 +34,26 @@ const TeamPage = () => {
         };
         fetchSeasons();
     }, []);
+
+    // Fetch user's favorite status for this team
+    useEffect(() => {
+        const checkFavorite = async () => {
+            if (!user) {
+                setIsFavorite(false);
+                return;
+            }
+            try {
+                const profile = await getMyProfile();
+                if (profile && profile.favoriteTeams) {
+                    const isFav = profile.favoriteTeams.some(f => f.teamId === parseInt(id));
+                    setIsFavorite(isFav);
+                }
+            } catch (err) {
+                console.error("Error checking favorite status:", err);
+            }
+        };
+        checkFavorite();
+    }, [user, id]);
 
     useEffect(() => {
         const fetchTeam = async () => {
@@ -74,6 +100,30 @@ const TeamPage = () => {
         fetchTeamData();
     }, [id, selectedSeason]);
 
+    const handleToggleFavorite = async () => {
+        if (!user) {
+            alert("Please log in to favorite teams.");
+            return;
+        }
+
+        try {
+            if (isFavorite) {
+                await removeFavoriteTeam(parseInt(id));
+                setIsFavorite(false);
+            } else {
+                await addFavoriteTeam(parseInt(id));
+                setIsFavorite(true);
+            }
+        } catch (err) {
+            console.error("Failed to toggle favorite", err);
+            if (err.response && err.response.status === 401) {
+                alert("Session expired. Please log in again.");
+            } else {
+                alert("Failed to update favorite. Please try again.");
+            }
+        }
+    };
+
     if (loading) return (
         <div className="flex justify-center items-center h-screen text-slate-500">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -98,6 +148,20 @@ const TeamPage = () => {
                         <p className="text-xl text-slate-300 mt-2">{team.city} • {team.abbreviation}</p>
                     </div>
                 </div>
+                {user && (
+                    <IconButton
+                        onClick={handleToggleFavorite}
+                        color="secondary"
+                        sx={{
+                            bgcolor: 'rgba(255,255,255,0.1)',
+                            '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' },
+                            zIndex: 10
+                        }}
+                        size="large"
+                    >
+                        {isFavorite ? <FavoriteIcon fontSize="large" /> : <FavoriteBorderIcon fontSize="large" />}
+                    </IconButton>
+                )}
                 <div className="text-9xl font-black text-white opacity-5 absolute right-0 -mr-10 pointer-events-none">
                     {team.abbreviation}
                 </div>

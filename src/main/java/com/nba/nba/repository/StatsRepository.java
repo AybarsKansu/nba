@@ -1,6 +1,8 @@
 package com.nba.nba.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.nba.nba.dto.AnalysisDTOs.TripleDoubleProjection;
 import com.nba.nba.entity.Stats;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
@@ -30,7 +32,7 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
                         "ORDER BY season_name DESC, avg_points DESC", nativeQuery = true)
         List<com.nba.nba.dto.AnalysisDTOs.PlayerSeasonStatsProjection> findAllPlayerSeasonStats();
 
-        // 2. Triple Doubles (Updated to include Steals and Blocks)
+        // 2. Triple Doubles
         @Query(value = "SELECT " +
                         "p.player_name as playerName, " +
                         "p.player_surname as playerSurname, " +
@@ -54,7 +56,7 @@ public interface StatsRepository extends JpaRepository<Stats, Integer> {
                         "(CASE WHEN st.blocks >= 10 THEN 1 ELSE 0 END) " +
                         ") >= 3 " +
                         "ORDER BY g.date DESC", nativeQuery = true)
-        List<com.nba.nba.dto.AnalysisDTOs.TripleDoubleProjection> findTripleDoubles(Integer seasonId);
+        List<TripleDoubleProjection> findTripleDoubles(Integer seasonId);
 
         // Double Doubles
         @Query(value = "SELECT " +

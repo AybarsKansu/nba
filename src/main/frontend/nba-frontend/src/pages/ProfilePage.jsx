@@ -48,6 +48,18 @@ const ProfilePage = () => {
 
   if (loading) return <Typography sx={{ color: 'white', p: 3 }}>Loading profile...</Typography>;
   if (error) return <Typography sx={{ color: 'red', p: 3 }}>{error}</Typography>;
+  if (!user) return (
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <Paper elevation={3} sx={{ p: 4, backgroundColor: '#1e1e1e', color: 'white', textAlign: 'center' }}>
+        <Typography variant="h5" gutterBottom>
+          Please log in to view your profile
+        </Typography>
+        <Typography variant="body1" color="gray">
+          You need to be authenticated to access this page.
+        </Typography>
+      </Paper>
+    </Container>
+  );
   if (!profile) return <Typography sx={{ color: 'white', p: 3 }}>No profile data found.</Typography>;
 
   return (
@@ -101,10 +113,8 @@ const ProfilePage = () => {
                 {profile.favoritePlayers.map((fav) => (
                   <ListItem key={fav.playerId} divider>
                     <ListItemText
-                      primary={fav.player ? fav.player.playerName : `Player ID: ${fav.playerId}`}
-                      secondary={fav.player ? `${fav.player.position} - ${fav.player.jerseyNumber}` : ''}
+                      primary={fav.player ? `${fav.player.playerName} ${fav.player.playerSurname}` : `Player ID: ${fav.playerId}`}
                       primaryTypographyProps={{ color: 'white' }}
-                      secondaryTypographyProps={{ color: 'gray' }}
                     />
                     <ListItemSecondaryAction>
                       <IconButton edge="end" aria-label="delete" onClick={() => handleRemovePlayer(fav.playerId)} sx={{ color: '#f50057' }}>

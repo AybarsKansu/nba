@@ -45,7 +45,7 @@ const LeaderCard = ({ title, leaders, valueKey, loading }) => (
   </Paper>
 );
 
-const LeadersSection = ({ seasonId }) => {
+const LeadersSection = ({ seasonId, standingsColumns, standingsRows }) => {
   const [pointsLeaders, setPointsLeaders] = useState([]);
   const [reboundsLeaders, setReboundsLeaders] = useState([]);
   const [assistsLeaders, setAssistsLeaders] = useState([]);
@@ -77,14 +77,53 @@ const LeadersSection = ({ seasonId }) => {
 
   return (
     <Grid container spacing={3} sx={{ mb: 3 }}>
-      <Grid item xs={12} md={4}>
-        <LeaderCard title="Points Leaders" leaders={pointsLeaders} valueKey="avgPoints" loading={loading} />
+      <Grid item xs={12} lg={9}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <LeaderCard title="Points Leaders" leaders={pointsLeaders} valueKey="avgPoints" loading={loading} />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <LeaderCard title="Rebounds Leaders" leaders={reboundsLeaders} valueKey="avgRebounds" loading={loading} />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <LeaderCard title="Assists Leaders" leaders={assistsLeaders} valueKey="avgAssists" loading={loading} />
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={4}>
-        <LeaderCard title="Rebounds Leaders" leaders={reboundsLeaders} valueKey="avgRebounds" loading={loading} />
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <LeaderCard title="Assists Leaders" leaders={assistsLeaders} valueKey="avgAssists" loading={loading} />
+      <Grid item xs={12} lg={3}>
+        <Paper sx={{ p: 2, height: '100%' }}>
+          <Typography variant="h6" color="primary" gutterBottom>
+            Standings
+          </Typography>
+          <Box sx={{ height: 400, width: '100%' }}>
+            {standingsRows && standingsColumns && (
+              <div style={{ height: '100%', width: '100%' }}>
+                <div style={{ fontSize: '0.875rem' }}>
+                  {standingsRows.slice(0, 10).map((row, index) => (
+                    <Box
+                      key={row.id}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        py: 1,
+                        px: 1,
+                        borderBottom: index < 9 ? '1px solid #f0f0f0' : 'none',
+                        '&:hover': { bgcolor: '#f5f5f5' }
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ fontWeight: 'bold', flex: 1 }}>
+                        {row.teamName}
+                      </Typography>
+                      <Typography variant="body2" sx={{ width: 40, textAlign: 'center' }}>
+                        {row.wins}-{row.losses}
+                      </Typography>
+                    </Box>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Box>
+        </Paper>
       </Grid>
     </Grid>
   );

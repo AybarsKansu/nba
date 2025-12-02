@@ -3,10 +3,7 @@ import {
   Container, Grid, Typography, Box, Card, CardContent, CardActions, Button, CircularProgress, Alert, IconButton
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { getAllTeams, addFavoriteTeam, removeFavoriteTeam, getMyProfile } from '../services/api';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { useAuth } from '../context/AuthContext';
+import { getAllTeams } from '../services/api';
 
 import { getTeamLogo } from '../utils/logoMapper';
 

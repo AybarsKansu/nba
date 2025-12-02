@@ -77,8 +77,8 @@ const GameDetail = () => {
                 </div>
             </div>
 
-            {/* Box Scores */}
-            <div className="grid grid-cols-1 gap-8">
+            {/* Box Scores - Side by Side on Desktop */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <BoxScoreTable teamName={game.homeTeamName} stats={homeStats} teamAbbreviation={game.homeTeamAbbreviation} />
                 <BoxScoreTable teamName={game.awayTeamName} stats={awayStats} teamAbbreviation={game.awayTeamAbbreviation} />
             </div>

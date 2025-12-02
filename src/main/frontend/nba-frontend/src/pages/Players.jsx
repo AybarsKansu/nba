@@ -68,6 +68,11 @@ const Players = () => {
       }
     } catch (err) {
       console.error("Failed to toggle favorite", err);
+      if (err.response && err.response.status === 401) {
+        alert("Session expired. Please log in again.");
+      } else {
+        alert("Failed to update favorite. Please try again.");
+      }
     }
   };
 

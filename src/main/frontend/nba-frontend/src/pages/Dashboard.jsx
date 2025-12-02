@@ -140,7 +140,7 @@ const Dashboard = () => {
         </Button>
       </Box>
 
-      {seasonId && <LeadersSection seasonId={seasonId} />}
+      {seasonId && <LeadersSection seasonId={seasonId} standings={standings} standingsColumns={columns} standingsRows={rows} />}
 
       <AdvancedAnalysisModal
         open={analysisOpen}
@@ -186,24 +186,6 @@ const Dashboard = () => {
                 <Typography variant="body1" sx={{ p: 2 }}>No recent games found.</Typography>
               )}
             </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Standings Section */}
-        <Grid item xs={12}>
-          <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-            <Typography component="h2" variant="h6" color="primary" gutterBottom>
-              Standings
-            </Typography>
-            <div style={{ height: 400, width: '100%' }}>
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                disableSelectionOnClick
-              />
-            </div>
           </Paper>
         </Grid>
       </Grid>
